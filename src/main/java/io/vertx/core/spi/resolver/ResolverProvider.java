@@ -21,7 +21,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxException;
 import io.vertx.core.dns.AddressResolverOptions;
 import io.vertx.core.impl.VertxImpl;
-import io.vertx.core.impl.resolver.DnsResolverProvider;
 import io.vertx.core.impl.resolver.DefaultResolverProvider;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -41,7 +40,8 @@ public interface ResolverProvider {
     // that use an unstable API and fallback on the default (blocking) provider
     try {
       if (!DISABLE_DNS_RESOLVER) {
-        return new DnsResolverProvider((VertxImpl) vertx, options);
+        throw new IllegalStateException("Netty Async DNS is not supported.");
+//        return null;//new DnsResolverProvider((VertxImpl) vertx, options);
       }
     } catch (Throwable e) {
       if (e instanceof VertxException) {

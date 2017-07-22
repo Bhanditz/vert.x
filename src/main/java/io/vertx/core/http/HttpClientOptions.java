@@ -178,6 +178,7 @@ public class HttpClientOptions extends ClientOptionsBase {
   private List<HttpVersion> alpnVersions;
   private boolean http2ClearTextUpgrade;
   private boolean sendUnmaskedFrames;
+  private boolean allowMaskMismatch;
   private int maxRedirects;
   private boolean forceSni;
   private int decoderInitialBufferSize;
@@ -219,6 +220,7 @@ public class HttpClientOptions extends ClientOptionsBase {
     this.alpnVersions = other.alpnVersions != null ? new ArrayList<>(other.alpnVersions) : null;
     this.http2ClearTextUpgrade = other.http2ClearTextUpgrade;
     this.sendUnmaskedFrames = other.isSendUnmaskedFrames();
+    this.allowMaskMismatch = other.isAllowMaskMismatch();
     this.maxRedirects = other.maxRedirects;
     this.forceSni = other.forceSni;
     this.decoderInitialBufferSize = other.getDecoderInitialBufferSize();
@@ -269,6 +271,7 @@ public class HttpClientOptions extends ClientOptionsBase {
     alpnVersions = new ArrayList<>(DEFAULT_ALPN_VERSIONS);
     http2ClearTextUpgrade = DEFAULT_HTTP2_CLEAR_TEXT_UPGRADE;
     sendUnmaskedFrames = DEFAULT_SEND_UNMASKED_FRAMES;
+    allowMaskMismatch = false;
     maxRedirects = DEFAULT_MAX_REDIRECTS;
     forceSni = DEFAULT_FORCE_SNI;
     decoderInitialBufferSize = DEFAULT_DECODER_INITIAL_BUFFER_SIZE;
@@ -618,6 +621,14 @@ public class HttpClientOptions extends ClientOptionsBase {
   }
 
   /**
+   * Allow non-standard masked frames.
+   * @return
+   */
+  public boolean isAllowMaskMismatch() {
+    return allowMaskMismatch;
+  }
+
+  /**
    * Set true when the client wants to skip frame masking.
    * You may want to set it true on server by server websocket communication: In this case you are by passing RFC6455 protocol.
    * It's false as default.
@@ -630,6 +641,10 @@ public class HttpClientOptions extends ClientOptionsBase {
     return this;
   }
 
+  public HttpClientOptions setAllowMaskMismatch(boolean allowMaskMismatch) {
+    this.allowMaskMismatch = allowMaskMismatch;
+    return this;
+  }
 
   /**
    * Get the maximum websocket framesize to use

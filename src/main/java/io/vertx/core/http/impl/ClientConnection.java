@@ -39,11 +39,7 @@ import io.vertx.core.net.impl.VertxNetHandler;
 import io.vertx.core.spi.metrics.HttpClientMetrics;
 
 import java.net.URI;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 import static io.vertx.core.http.HttpHeaders.ACCEPT_ENCODING;
 import static io.vertx.core.http.HttpHeaders.CLOSE;
@@ -133,10 +129,11 @@ class ClientConnection extends Http1xConnectionBase implements HttpClientConnect
         nettyHeaders = null;
       }
       handshaker = WebSocketClientHandshakerFactory.newHandshaker(wsuri, version, subProtocols, false,
-                                                                  nettyHeaders, maxWebSocketFrameSize,!client.getOptions().isSendUnmaskedFrames(),false);
+                                                                  nettyHeaders, maxWebSocketFrameSize,!client.getOptions().isSendUnmaskedFrames(),client.getOptions().isAllowMaskMismatch());
       ChannelPipeline p = chctx.pipeline();
+      final Set<ChannelHandler> handlers = Collections.singleton(p.get("codec"));
       p.addBefore("handler", "handshakeCompleter", new HandshakeInboundHandler(wsConnect, version != WebSocketVersion.V00));
-      handshaker.handshake(chctx.channel()).addListener(future -> {
+      handshaker.handshake(chctx.channel(), handlers).addListener(future -> {
         Handler<Throwable> handler = exceptionHandler();
         if (!future.isSuccess() && handler != null) {
           handler.handle(future.cause());

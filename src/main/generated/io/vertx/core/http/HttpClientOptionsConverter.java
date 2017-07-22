@@ -27,6 +27,9 @@ import io.vertx.core.json.JsonArray;
 public class HttpClientOptionsConverter {
 
   public static void fromJson(JsonObject json, HttpClientOptions obj) {
+    if (json.getValue("allowMaskMismatch") instanceof Boolean) {
+      obj.setAllowMaskMismatch((Boolean)json.getValue("allowMaskMismatch"));
+    }
     if (json.getValue("alpnVersions") instanceof JsonArray) {
       java.util.ArrayList<io.vertx.core.http.HttpVersion> list = new java.util.ArrayList<>();
       json.getJsonArray("alpnVersions").forEach( item -> {
@@ -110,6 +113,7 @@ public class HttpClientOptionsConverter {
   }
 
   public static void toJson(HttpClientOptions obj, JsonObject json) {
+    json.put("allowMaskMismatch", obj.isAllowMaskMismatch());
     if (obj.getAlpnVersions() != null) {
       JsonArray array = new JsonArray();
       obj.getAlpnVersions().forEach(item -> array.add(item.name()));

@@ -23,7 +23,7 @@
   </parent>
 
   <artifactId>vertx-core</artifactId>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>3.5.0.Workato-SNAPSHOT</version>
 
   <name>Vert.x Core</name>
 
@@ -48,7 +48,7 @@
 
   <properties>
 
-    <netty.version>4.1.8.Final</netty.version>
+    <netty.version>4.1.14.Workato-SNAPSHOT</netty.version>
     <tcnative.version>1.1.33.Fork26</tcnative.version>
     <jackson.version>2.7.4</jackson.version>
     <log4j.version>1.2.17</log4j.version>
